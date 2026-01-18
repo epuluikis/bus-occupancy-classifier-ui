@@ -174,8 +174,8 @@ def predict(spec, model, transform, img):
     }
 
 
-st.set_page_config(page_title="Bus Occupancy Prediction")
-st.title("Bus Occupancy Prediction")
+st.set_page_config(page_title="Bus Occupancy Classifier")
+st.title("Bus Occupancy Classifier")
 st.subheader("Multi-Model and Training Strategy Comparison")
 
 selected_models = st.multiselect(
