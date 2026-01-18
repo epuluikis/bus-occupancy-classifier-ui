@@ -187,8 +187,8 @@ selected_models = st.multiselect(
 st.divider()
 
 uploaded = st.file_uploader(
-    "Upload bus image",
-    type=["jpg", "jpeg", "png"]
+    "Upload image",
+    type=["jpg", "jpeg", "png", "webp"]
 )
 
 if uploaded:
@@ -222,12 +222,25 @@ if uploaded:
 
     votes = [out["pred_idx"] for _, _, out in results]
     counts = {i: votes.count(i) for i in range(NUM_CLASSES)}
-    best = max(counts.items(), key=lambda x: x[1])
+    max_votes = max(counts.values())
+    majority_classes = [
+        i for i, c in counts.items() if c == max_votes and c > 0
+    ]
 
-    st.write(
-        f"Majority prediction: **{CLASS_NAMES[best[0]]}** "
-        f"({best[1]}/{len(votes)} models)"
-    )
+    if len(majority_classes) == 1:
+        idx = majority_classes[0]
+        st.write(
+            f"Majority prediction: **{CLASS_NAMES[idx]}** "
+            f"({max_votes}/{len(votes)} models)"
+        )
+    else:
+        labels = ", ".join(
+            f"**{CLASS_NAMES[i]}**" for i in majority_classes
+        )
+        st.write(
+            f"Majority predictions (tie): {labels} "
+            f"({max_votes}/{len(votes)} models each)"
+        )
 
     for name, spec, out in results:
         with st.expander(
